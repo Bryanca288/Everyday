@@ -10,14 +10,14 @@ bg_choice = st.sidebar.selectbox(
 )
 
 backgrounds = {
-    "Minecraft": "https://wallpapers.com/images/hd/minecraft-grass-block-texture-1920x1080.jpg",
+    "Minecraft": "https://wallpapers.com/images/high/majestic-landscape-in-4k-minecraft-world-jxgb7zwc2fmwn7av.webp",
     "Galaxy": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564",
-    "Mario": "https://wallpapers.com/images/hd/super-mario-bros-background-1920x1080.jpg",
-    "Heaven": "https://images.unsplash.com/photo-1502082553048-f009c37129b9",
+    "Mario": "https://4kwallpapers.com/images/walls/thumbs_3t/23948.jpg",
+    "Heaven": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=3840&q=80",
     "Spiderman": "https://wallpapers.com/images/hd/spiderman-4k-background.jpg",
     "Emerald": "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a",
-    "Diamond": "https://images.unsplash.com/photo-1603570419981-0c0f7f29d0e2",
-    "Anime": "https://wallpapers.com/images/hd/anime-landscape-1920x1080.jpg"
+    "Diamond": "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=3840&q=80",
+    "Anime": "https://images8.alphacoders.com/131/thumbbig-1314408.webp"
 }
 
 bg_url = backgrounds[bg_choice]
