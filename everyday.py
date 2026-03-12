@@ -10,13 +10,13 @@ bg_choice = st.sidebar.selectbox(
 )
 
 backgrounds = {
-    "Minecraft": "https://wallpapers.com/images/high/majestic-landscape-in-4k-minecraft-world-jxgb7zwc2fmwn7av.webp",
+    "Minecraft": "https://wallpapercave.com/wp/wp5022404.jpg",
     "Galaxy": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564",
     "Mario": "https://4kwallpapers.com/images/walls/thumbs_3t/23948.jpg",
-    "Heaven": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=3840&q=80",
-    "Spiderman": "https://wallpapers.com/images/hd/spiderman-4k-background.jpg",
+    "Heaven": "https://w.wallhaven.cc/full/m3/wallhaven-m3d3oy.jpg",
+    "Spiderman": "https://4kwallpapers.com/images/walls/thumbs_2t/11476.png",
     "Emerald": "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a",
-    "Diamond": "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=3840&q=80",
+    "Diamond": "https://wallpaperaccess.com/full/175847.jpg",
     "Anime": "https://images8.alphacoders.com/131/thumbbig-1314408.webp"
 }
 
