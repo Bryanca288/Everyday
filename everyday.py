@@ -22,22 +22,54 @@ backgrounds = {
 
 bg_url = backgrounds[bg_choice]
 
+# ---------------- BETTER FONT + STYLE ----------------
 st.markdown(
     f"""
     <style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    html, body, [class*="css"] {{
+        font-family: 'Poppins', sans-serif;
+        color: white;
+    }}
+
     .stApp {{
         background-image: url("{bg_url}");
         background-size: cover;
         background-attachment: fixed;
     }}
-    .stTextArea textarea {{
-        background-color: rgba(255,255,255,0.85);
-    }}
-    .stButton button {{
-        background-color: rgba(0,0,0,0.6);
+
+    h1, h2, h3 {{
         color: white;
+        text-shadow: 2px 2px 6px black;
+        font-weight: 600;
+    }}
+
+    p, span, label {{
+        font-size: 18px;
+        text-shadow: 1px 1px 4px black;
+    }}
+
+    .stTextArea textarea {{
+        background-color: rgba(255,255,255,0.9);
+        color: black;
+        font-size: 16px;
         border-radius: 10px;
     }}
+
+    .stButton button {{
+        background-color: rgba(0,0,0,0.7);
+        color: white;
+        border-radius: 10px;
+        font-size: 16px;
+        padding: 6px 15px;
+    }}
+
+    section[data-testid="stSidebar"] {{
+        background-color: rgba(0,0,0,0.6);
+    }}
+
     </style>
     """,
     unsafe_allow_html=True
