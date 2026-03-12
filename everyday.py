@@ -22,7 +22,7 @@ backgrounds = {
 
 bg_url = backgrounds[bg_choice]
 
-# ---------------- BETTER FONT + STYLE ----------------
+# ---------------- BETTER FONT + BLACK TEXT ----------------
 st.markdown(
     f"""
     <style>
@@ -31,7 +31,7 @@ st.markdown(
 
     html, body, [class*="css"] {{
         font-family: 'Poppins', sans-serif;
-        color: white;
+        color: black;
     }}
 
     .stApp {{
@@ -41,14 +41,15 @@ st.markdown(
     }}
 
     h1, h2, h3 {{
-        color: white;
-        text-shadow: 2px 2px 6px black;
+        color: black;
+        text-shadow: 1px 1px 2px white;
         font-weight: 600;
     }}
 
     p, span, label {{
         font-size: 18px;
-        text-shadow: 1px 1px 4px black;
+        text-shadow: 1px 1px 1px white;
+        color: black;
     }}
 
     .stTextArea textarea {{
@@ -59,15 +60,16 @@ st.markdown(
     }}
 
     .stButton button {{
-        background-color: rgba(0,0,0,0.7);
-        color: white;
+        background-color: rgba(255,255,255,0.8);
+        color: black;
         border-radius: 10px;
         font-size: 16px;
         padding: 6px 15px;
     }}
 
     section[data-testid="stSidebar"] {{
-        background-color: rgba(0,0,0,0.6);
+        background-color: rgba(255,255,255,0.8);
+        color: black;
     }}
 
     </style>
