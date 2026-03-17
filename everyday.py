@@ -96,13 +96,6 @@ st.markdown(
     f"""
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-html, body, [class*="css"] {{
-font-family: 'Poppins', sans-serif;
-color: black;
-}}
-
 .stApp {{
 background-image: url("{bg_url}");
 background-size: cover;
@@ -112,33 +105,20 @@ background-attachment: fixed;
 h1, h2, h3 {{
 color: black;
 text-shadow: 1px 1px 2px white;
-font-weight: 600;
 }}
 
 p, span, label {{
-font-size: 18px;
-text-shadow: 1px 1px 1px white;
 color: black;
 }}
 
 .stTextArea textarea {{
 background-color: rgba(255,255,255,0.9);
 color: black;
-font-size: 16px;
 border-radius: 10px;
-}}
-
-.stButton button {{
-background-color: rgba(255,255,255,0.8);
-color: black;
-border-radius: 10px;
-font-size: 16px;
-padding: 6px 15px;
 }}
 
 section[data-testid="stSidebar"] {{
 background-color: rgba(255,255,255,0.8);
-color: black;
 }}
 
 </style>
@@ -162,7 +142,7 @@ with st.sidebar:
 
     game = st.selectbox("Choose Game", ["Guess the Number", "Rock Paper Scissors"])
 
-    # -------- GAME 1 --------
+    # GAME 1
     if game == "Guess the Number":
 
         if "number" not in st.session_state:
@@ -179,7 +159,7 @@ with st.sidebar:
             else:
                 st.warning("Too high")
 
-    # -------- GAME 2 --------
+    # GAME 2
     if game == "Rock Paper Scissors":
 
         choice = st.selectbox("Your move", ["Rock", "Paper", "Scissors"])
@@ -198,27 +178,6 @@ with st.sidebar:
                 st.success("You win!")
             else:
                 st.error("You lose!")
-
-    # ---------------- HOLIDAY LIST ----------------
-    st.markdown("---")
-    st.subheader("🎉 Holiday List")
-
-    holidays = {
-        "Jan 1": "New Year's Day",
-        "Feb 25": "EDSA People Power Revolution",
-        "Apr 9": "Araw ng Kagitingan",
-        "May 1": "Labor Day",
-        "Jun 12": "Independence Day",
-        "Aug 21": "Ninoy Aquino Day",
-        "Aug (Last Mon)": "National Heroes Day",
-        "Nov 1": "All Saints' Day",
-        "Nov 30": "Bonifacio Day",
-        "Dec 25": "Christmas Day",
-        "Dec 30": "Rizal Day"
-    }
-
-    for day, name in holidays.items():
-        st.write(f"📅 **{day}** - {name}")
 
 # ---------------- MAIN APP ----------------
 st.title("📔 Everyday Notes")
@@ -271,8 +230,23 @@ if saved:
     st.write("### Saved Note")
     st.write(saved[0])
 
+# ---------------- ALL NOTES VIEW ----------------
+st.subheader("📜 All Your Notes")
+
+c.execute(
+    "SELECT date, note FROM notes WHERE username=? ORDER BY date DESC",
+    (st.session_state.user,)
+)
+
+rows = c.fetchall()
+
+for r in rows:
+    st.write(f"📅 {r[0]}")
+    st.write(r[1])
+    st.markdown("---")
+
 # ---------------- RESET ----------------
 if st.button("Reset All Notes"):
     c.execute("DELETE FROM notes WHERE username=?", (st.session_state.user,))
     conn.commit()
-    st.success("All notes deleted") 
+    st.success("All notes deleted")
