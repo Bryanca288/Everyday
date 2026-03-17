@@ -2,6 +2,75 @@ import streamlit as st
 from datetime import date
 import calendar
 import random
+import sqlite3
+
+# ---------------- DATABASE ----------------
+conn = sqlite3.connect("notes_app.db", check_same_thread=False)
+c = conn.cursor()
+
+c.execute("""
+CREATE TABLE IF NOT EXISTS users(
+username TEXT PRIMARY KEY,
+password TEXT
+)
+""")
+
+c.execute("""
+CREATE TABLE IF NOT EXISTS notes(
+username TEXT,
+date TEXT,
+note TEXT
+)
+""")
+
+conn.commit()
+
+# ---------------- LOGIN SESSION ----------------
+if "user" not in st.session_state:
+    st.session_state.user = None
+
+# ---------------- SIDEBAR LOGIN ----------------
+st.sidebar.title("🔐 Account")
+
+menu = st.sidebar.selectbox("Account", ["Login", "Register", "Logout"])
+
+if menu == "Register":
+
+    new_user = st.sidebar.text_input("Username")
+    new_pass = st.sidebar.text_input("Password", type="password")
+
+    if st.sidebar.button("Create Account"):
+        try:
+            c.execute("INSERT INTO users VALUES (?,?)", (new_user, new_pass))
+            conn.commit()
+            st.sidebar.success("Account created!")
+        except:
+            st.sidebar.error("User already exists")
+
+elif menu == "Login":
+
+    user = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type="password")
+
+    if st.sidebar.button("Login"):
+        c.execute("SELECT * FROM users WHERE username=? AND password=?", (user, password))
+        result = c.fetchone()
+
+        if result:
+            st.session_state.user = user
+            st.sidebar.success("Logged in!")
+        else:
+            st.sidebar.error("Invalid login")
+
+elif menu == "Logout":
+    if st.sidebar.button("Logout"):
+        st.session_state.user = None
+        st.sidebar.success("Logged out")
+
+# STOP APP IF NOT LOGGED IN
+if st.session_state.user is None:
+    st.title("🔐 Please Login First")
+    st.stop()
 
 # ---------------- BACKGROUND SELECTOR ----------------
 bg_choice = st.sidebar.selectbox(
@@ -22,64 +91,63 @@ backgrounds = {
 
 bg_url = backgrounds[bg_choice]
 
-# ---------------- BETTER FONT + BLACK TEXT ----------------
+# ---------------- STYLE ----------------
 st.markdown(
     f"""
-    <style>
+<style>
 
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    html, body, [class*="css"] {{
-        font-family: 'Poppins', sans-serif;
-        color: black;
-    }}
+html, body, [class*="css"] {{
+font-family: 'Poppins', sans-serif;
+color: black;
+}}
 
-    .stApp {{
-        background-image: url("{bg_url}");
-        background-size: cover;
-        background-attachment: fixed;
-    }}
+.stApp {{
+background-image: url("{bg_url}");
+background-size: cover;
+background-attachment: fixed;
+}}
 
-    h1, h2, h3 {{
-        color: black;
-        text-shadow: 1px 1px 2px white;
-        font-weight: 600;
-    }}
+h1, h2, h3 {{
+color: black;
+text-shadow: 1px 1px 2px white;
+font-weight: 600;
+}}
 
-    p, span, label {{
-        font-size: 18px;
-        text-shadow: 1px 1px 1px white;
-        color: black;
-    }}
+p, span, label {{
+font-size: 18px;
+text-shadow: 1px 1px 1px white;
+color: black;
+}}
 
-    .stTextArea textarea {{
-        background-color: rgba(255,255,255,0.9);
-        color: black;
-        font-size: 16px;
-        border-radius: 10px;
-    }}
+.stTextArea textarea {{
+background-color: rgba(255,255,255,0.9);
+color: black;
+font-size: 16px;
+border-radius: 10px;
+}}
 
-    .stButton button {{
-        background-color: rgba(255,255,255,0.8);
-        color: black;
-        border-radius: 10px;
-        font-size: 16px;
-        padding: 6px 15px;
-    }}
+.stButton button {{
+background-color: rgba(255,255,255,0.8);
+color: black;
+border-radius: 10px;
+font-size: 16px;
+padding: 6px 15px;
+}}
 
-    section[data-testid="stSidebar"] {{
-        background-color: rgba(255,255,255,0.8);
-        color: black;
-    }}
+section[data-testid="stSidebar"] {{
+background-color: rgba(255,255,255,0.8);
+color: black;
+}}
 
-    </style>
-    """,
+</style>
+""",
     unsafe_allow_html=True
 )
 
 # ---------------- SESSION STATE ----------------
-if "notes_by_date" not in st.session_state:
-    st.session_state.notes_by_date = {}
+if "selected_date" not in st.session_state:
     st.session_state.selected_date = date.today()
 
 # ---------------- SIDEBAR ----------------
@@ -182,17 +250,29 @@ st.subheader(f"Notes for {st.session_state.selected_date}")
 note = st.text_area("Write your note")
 
 if st.button("Save Note"):
-    st.session_state.notes_by_date[str(st.session_state.selected_date)] = note
+
+    c.execute(
+        "INSERT OR REPLACE INTO notes VALUES (?,?,?)",
+        (st.session_state.user, str(st.session_state.selected_date), note)
+    )
+
+    conn.commit()
     st.success("Saved!")
 
 # ---------------- SHOW SAVED NOTE ----------------
-saved = st.session_state.notes_by_date.get(str(st.session_state.selected_date))
+c.execute(
+    "SELECT note FROM notes WHERE username=? AND date=?",
+    (st.session_state.user, str(st.session_state.selected_date))
+)
+
+saved = c.fetchone()
 
 if saved:
     st.write("### Saved Note")
-    st.write(saved)
+    st.write(saved[0])
 
 # ---------------- RESET ----------------
 if st.button("Reset All Notes"):
-    st.session_state.notes_by_date = {}
-    st.success("All notes deleted")
+    c.execute("DELETE FROM notes WHERE username=?", (st.session_state.user,))
+    conn.commit()
+    st.success("All notes deleted") 
