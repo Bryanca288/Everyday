@@ -140,26 +140,49 @@ with st.sidebar:
 
     st.title("🎮 Mini Games")
 
-    game = st.selectbox("Choose Game", ["Guess the Number", "Rock Paper Scissors"])
+    game = st.selectbox("Choose Game", ["Tic Tac Toe", "Rock Paper Scissors"])
 
-    # GAME 1
-    if game == "Guess the Number":
+    # ---------------- TIC TAC TOE ----------------
+    if game == "Tic Tac Toe":
 
-        if "number" not in st.session_state:
-            st.session_state.number = random.randint(1, 10)
+        if "board" not in st.session_state:
+            st.session_state.board = [""] * 9
+            st.session_state.turn = "X"
 
-        guess = st.number_input("Guess 1-10", 1, 10)
+        board = st.session_state.board
 
-        if st.button("Check"):
-            if guess == st.session_state.number:
-                st.success("🎉 Correct!")
-                st.session_state.number = random.randint(1, 10)
-            elif guess < st.session_state.number:
-                st.warning("Too low")
-            else:
-                st.warning("Too high")
+        def check_winner(b):
+            wins = [
+                (0,1,2),(3,4,5),(6,7,8),
+                (0,3,6),(1,4,7),(2,5,8),
+                (0,4,8),(2,4,6)
+            ]
+            for a,b1,c in wins:
+                if board[a] == board[b1] == board[c] and board[a] != "":
+                    return board[a]
+            return None
 
-    # GAME 2
+        cols = st.columns(3)
+
+        for i in range(9):
+
+            col = cols[i % 3]
+
+            if col.button(board[i] if board[i] else " ", key=f"cell{i}"):
+
+                if board[i] == "":
+                    board[i] = st.session_state.turn
+                    st.session_state.turn = "O" if st.session_state.turn == "X" else "X"
+
+        winner = check_winner(board)
+
+        if winner:
+            st.success(f"🎉 Player {winner} wins!")
+            if st.button("Restart Game"):
+                st.session_state.board = [""] * 9
+                st.session_state.turn = "X"
+
+    # ---------------- ROCK PAPER SCISSORS ----------------
     if game == "Rock Paper Scissors":
 
         choice = st.selectbox("Your move", ["Rock", "Paper", "Scissors"])
